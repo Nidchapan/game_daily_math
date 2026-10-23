@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+  <meta content="#29213e" name="theme-color"/>
+  <meta content="yes" name="apple-mobile-web-app-capable"/>
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+  <meta content="Daily Math" name="apple-mobile-web-app-title"/>
+  <title>
+   Daily Math · Bedtime Edition
+  </title>
+  <style>
+   
+    :root {
+        font-family:ui-rounded,system-ui,-apple-system,'Segoe UI',sans-serif;
+        color:#fff3fc;
+        background:#211b33
+    }
+    * {
+        box-sizing:border-box
+    }
+    body {
+        margin:0;
+        min-height:100svh;
+        background:radial-gradient(ellipse at 10% 15%,#66517e 0,transparent 35%),radial-gradient(ellipse at 95% 85%,#573957 0,transparent 40%),#211b33
+    }
+    .app {
+        max-width:900px;
+        min-height:100svh;
+        margin:auto;
+        padding:max(24px,env(safe-area-inset-top)) 22px max(30px,env(safe-area-inset-bottom));
+        position:relative;
+        overflow:hidden
+    }
+    .app:before {
+        content:'✧   ✦   ☾   ✧';
+        position:absolute;
+        top:16%;
+        right:-10px;
+        color:#e8bde5;
+        opacity:.15;
+        font-size:50px;
+        transform:rotate(-24deg);
+        pointer-events:none
+    }
+    .top {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        font-size:12px;
+        letter-spacing:2px;
+        color:#e9c6ee
+    }
+    .top b {
+        font-size:15px;
+        letter-spacing:.6px
+    }
+    .center {
+        text-align:center
+    }
+    .moon {
+        font-size:36px;
+        color:#ffe2ed;
+        margin:18px 0 8px;
+        text-shadow:0 0 22px #eeb8e3
+    }
+    .eyebrow {
+        font-size:12px;
+        letter-spacing:2px;
+        color:#dbc5ea
+    }
+    .progress {
+        height:7px;
+        background:#584a69;
+        border-radius:99px;
+        margin:20px 0 26px;
+        overflow:hidden
+    }
+    .progress>div {
+        height:100%;
+        width:0;
+        background:linear-gradient(90deg,#b8a0f2,#f5abd2);
+        border-radius:99px;
+        transition:width .25s
+    }
+    .question-card {
+        background:linear-gradient(145deg,#554466,#463655);
+        border:1px solid #826a8d55;
+        border-radius:28px;
+        padding:32px 16px;
+        margin-bottom:16px;
+        box-shadow:inset 0 1px #ffffff19
+    }
+    .small {
+        font-size:13px;
+        color:#f1d7ef
+    }
+    .expression {
+        font-size:clamp(32px,7vw,56px);
+        font-weight:750;
+        margin:23px 0;
+        letter-spacing:1px
+    }
+    .hint {
+        font-size:13px;
+        color:#f4bdda
+    }
+    .timer {
+        font-variant-numeric:tabular-nums;
+        color:#f5c0e3;
+        font-size:28px;
+        font-weight:700;
+        margin:16px
+    }
+    .answer {
+        width:100%;
+        padding:16px;
+        text-align:center;
+        border-radius:20px;
+        border:2px solid #f5d2e8;
+        background:#fff1fa;
+        color:#38294b;
+        font-size:24px;
+        outline:none
+    }
+    .answer:focus {
+        border-color:#c9a8f0;
+        box-shadow:0 0 0 3px #d3b3e84d
+    }
+    .btn {
+        width:100%;
+        border:0;
+        border-radius:22px;
+        padding:16px 20px;
+        font-size:16px;
+        font-weight:750;
+        color:#372746;
+        cursor:pointer;
+        box-shadow:inset 0 2px #fff8,0 8px 20px #130d2455;
+        margin-top:12px;
+        background:linear-gradient(120deg,#ffcff0,#e5b5f2 52%,#ffc2dd)
+    }
+    .btn:active {
+        transform:translateY(2px)
+    }
+    .btn.secondary {
+        background:linear-gradient(120deg,#e8d9e9,#fff0f5);
+        font-weight:650
+    }
+    .btn.ghost {
+        background:#ffffff16;
+        color:#f7dff7;
+        box-shadow:none;
+        border:1px solid #c9a9dc55
+    }
+    .feedback {
+        min-height:24px;
+        color:#ffbed6;
+        text-align:center;
+        font-size:14px;
+        margin-top:10px
+    }
+    .footer {
+        margin-top:20px;
+        text-align:center;
+        color:#bba7cd;
+        font-size:12px
+    }
+    .stats-title {
+        text-align:center;
+        margin:5px 0 22px
+    }
+    .stats-title h1 {
+        font-size:27px;
+        margin:3px 0;
+        color:#f4c7e8
+    }
+    .stats-title p {
+        color:#f7d8ed;
+        font-size:13px
+    }
+    .tiles {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:12px;
+        margin:20px 0
+    }
+    .tile {
+        border-radius:22px;
+        padding:19px 14px;
+        background:linear-gradient(135deg,#5a486b,#493854);
+        display:flex;
+        align-items:center;
+        gap:12px;
+        min-height:96px
+    }
+    .tile .icon {
+        font-size:24px;
+        display:grid;
+        place-items:center;
+        flex-shrink:0;
+        background:linear-gradient(135deg,#f9b6dc,#a996db);
+        border-radius:50%;
+        width:48px;
+        height:48px
+    }
+    .tile .label {
+        font-size:11px;
+        letter-spacing:1px;
+        color:#cdb5db
+    }
+    .tile .value {
+        font-size:25px;
+        font-weight:750
+    }
+    .chart-card {
+        background:radial-gradient(circle at 8% 14%,#f7d8f3,transparent 42%),linear-gradient(140deg,#fff0f9,#f2d8ef);
+        border-radius:28px;
+        padding:20px 12px 12px;
+        color:#58406e;
+        overflow:hidden;
+        position:relative
+    }
+    .chart-card:before {
+        content:'☁  ✧';
+        position:absolute;
+        top:7px;
+        left:15px;
+        color:#d3b1e6;
+        opacity:.7;
+        font-size:24px
+    }
+    .chart-card:after {
+        content:'☾  ✦';
+        position:absolute;
+        top:5px;
+        right:14px;
+        color:#dba7c8;
+        opacity:.7;
+        font-size:24px
+    }
+    .chart-title {
+        text-align:center;
+        font-size:18px;
+        font-weight:800;
+        margin:3px 0 5px
+    }
+    .chart-note {
+        text-align:center;
+        color:#8f6e99;
+        font-size:12px;
+        margin-bottom:8px
+    }
+    .chart-svg {
+        display:block;
+        width:100%;
+        height:auto;
+        max-height:340px
+    }
+    .total {
+        text-align:center;
+        font-size:14px;
+        margin:18px;
+        color:#f2d7ee
+    }
+    .hide {
+        display:none!important
+    }
+    @media(min-width:700px) {
+        .app {
+            padding-left:50px;
+            padding-right:50px
+        }
+        .game-layout {
+            max-width:600px;
+            margin:auto
+        }
+        .tiles {
+            grid-template-columns:repeat(4,1fr)
+        }
+        .tile {
+            display:block;
+            text-align:center
+        }
+        .tile .icon {
+            margin:0 auto 10px
+        }
+        .chart-card {
+            padding:24px
+        }
+        .chart-svg {
+            max-height:360px
+        }
+    }
+    @media(max-width:380px) {
+        .tile {
+            padding:12px 9px;
+            gap:8px
+        }
+        .tile .icon {
+            width:38px;
+            height:38px;
+            font-size:18px
+        }
+        .tile .value {
+            font-size:21px
+        }
+    }
+  
+  </style>
+ </head>
+ <body>
+  <main class="app">
+   <header class="top">
+    <b>
+     ☾ DAILY MATH
+    </b>
+    <span>
+     BEDTIME EDITION
+    </span>
+   </header>
+   <section class="game-layout" id="game">
+    <div class="center">
+     <div class="moon">
+      ☾ ✦ ✧
+     </div>
+     <p class="eyebrow" id="counter">
+      QUESTION 01 OF 20
+     </p>
+    </div>
+    <div class="progress">
+     <div id="bar">
+     </div>
+    </div>
+    <div class="question-card center">
+     <div class="small">
+      Take your time, little star ✨
+     </div>
+     <div class="expression" id="expression">
+      …
+     </div>
+     <div class="hint" id="scoreline">
+      ✦ 0 correct · 0 mistakes ✦
+     </div>
+    </div>
+    <div class="timer" id="timer" style="text-align:center">
+     ◷ 00:00.0
+    </div>
+    <form id="answerForm">
+     <input autocomplete="off" class="answer" id="answer" inputmode="numeric" placeholder="Your answer..." required="" type="number"/>
+     <button class="btn" type="submit">
+      Submit Answer →
+     </button>
+    </form>
+    <div class="feedback" id="feedback">
+    </div>
+    <button class="btn ghost" id="restart" type="button">
+     ↻ Restart Game
+    </button>
+    <div class="footer">
+     ☁ A little math before sweet dreams ☁
+    </div>
+   </section>
+   <section class="hide center" id="complete">
+    <div class="moon">
+     ☾ ✨
+    </div>
+    <h1>
+     Session Complete!
+    </h1>
+    <p id="completeLine">
+     Your mind deserves a little rest ✨
+    </p>
+    <button class="btn" id="viewStats">
+     View Statistics →
+    </button>
+    <button class="btn secondary" id="playAgain1">
+     ↻ Play Again
+    </button>
+   </section>
+   <section class="hide" id="stats">
+    <div class="stats-title">
+     <div class="moon">
+      ☾ ✨
+     </div>
+     <h1>
+      Your Performance
+     </h1>
+     <p id="accuracy">
+      ♡ Accuracy 100.0% ♡
+     </p>
+    </div>
+    <div class="tiles">
+     <div class="tile">
+      <span class="icon">
+       ◷
+      </span>
+      <div>
+       <div class="label">
+        AVERAGE
+       </div>
+       <div class="value" id="avg">
+        0s
+       </div>
+      </div>
+     </div>
+     <div class="tile">
+      <span class="icon">
+       ϟ
+      </span>
+      <div>
+       <div class="label">
+        FASTEST
+       </div>
+       <div class="value" id="fast">
+        0s
+       </div>
+      </div>
+     </div>
+     <div class="tile">
+      <span class="icon">
+       ☁
+      </span>
+      <div>
+       <div class="label">
+        SLOWEST
+       </div>
+       <div class="value" id="slow">
+        0s
+       </div>
+      </div>
+     </div>
+     <div class="tile">
+      <span class="icon">
+       ♡
+      </span>
+      <div>
+       <div class="label">
+        MISTAKES
+       </div>
+       <div class="value" id="mistakes">
+        0
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="total" id="totalTime">
+     ✦ Total Time: 0s ✦
+    </div>
+    <div class="chart-card">
+     <div class="chart-title">
+      Response Time
+     </div>
+     <div class="chart-note" id="averageNote">
+      — Average
+     </div>
+     <svg aria-label="Response time by question" class="chart-svg" id="chart" role="img" viewbox="0 0 700 300">
+     </svg>
+    </div>
+    <button class="btn" id="playAgain2">
+     ↻ Play Again
+    </button>
+    <button class="btn secondary" id="back">
+     ← Back to Game
+    </button>
+   </section>
+  </main>
+  <script>
+   
+    const $=id=>document.getElementById(id);
+    const TOTAL=20;
+    let current=0,score=0,mistakes=0,questionMistakes=0,q=null,start=0,history=[],finished=false,ticker=null;
+    const rand=()=>Math.floor(Math.random()*20)+1;
+    function makeQ() {
+        let a,b,c,o1,o2,v;
+        do {
+            a=rand();
+            b=rand();
+            c=rand();
+            o1=Math.random()<.5?'+':'−';
+            o2=Math.random()<.5?'+':'−';
+            v=a+(o1==='+'?b:-b)+(o2==='+'?c:-c)
+        }
+        while(v<=0);
+        return {
+            text:`${a} ${o1} ${b} ${o2} ${c} = ?`,answer:v
+        }
+    }
+    function show(id) {
+        ['game','complete','stats'].forEach(p=>$(p).classList.toggle('hide',p!==id))
+    }
+    function clock() {
+        let t=(performance.now()-start)/1000;
+        let m=Math.floor(t/60);
+        $('timer').textContent=`◷ ${String(m).padStart(2,'0')}:${(t%60).toFixed(1).padStart(4,'0')}`
+    }
+    function next() {
+        if(current>=TOTAL) {
+            finish();
+            return
+        }
+        current++;
+        questionMistakes=0;
+        q=makeQ();
+        $('expression').textContent=q.text;
+        $('counter').textContent=`QUESTION ${String(current).padStart(2,'0')} OF ${String(TOTAL).padStart(2,'0')}`;
+        $('scoreline').textContent=`✦ ${score} correct · ${mistakes} mistakes ✦`;
+        $('bar').style.width=`${(current-1)/TOTAL*100}%`;
+        $('answer').value='';
+        $('feedback').textContent='';
+        start=performance.now();
+        clearInterval(ticker);
+        clock();
+        ticker=setInterval(clock,100)
+    }
+    function restart() {
+        clearInterval(ticker);
+        current=0;
+        score=0;
+        mistakes=0;
+        history=[];
+        finished=false;
+        show('game');
+        next()
+    }
+    $('answerForm').addEventListener('submit',e=> {
+        e.preventDefault();
+        if(finished)return;
+        let s=$('answer').value;
+        if(s.trim()==='')return;
+        let n=Number(s);
+        if(!Number.isInteger(n)) {
+            $('feedback').textContent='Please enter a whole number.';
+            return
+        }
+        if(n!==q.answer) {
+            mistakes++;
+            questionMistakes++;
+            $('feedback').textContent='♡ Not quite, try again!';
+            $('answer').value='';
+            return
+        }
+        let t=(performance.now()-start)/1000;
+        score++;
+        history.push( {
+            question:current,expression:q.text,answer:q.answer,mistakes:questionMistakes,seconds:t
+        });
+        next()
+    });
+    $('restart').onclick=restart;
+    $('playAgain1').onclick=restart;
+    $('playAgain2').onclick=restart;
+    $('viewStats').onclick=()=>show('stats');
+    $('back').onclick=()=>show('complete');
+    function finish() {
+        clearInterval(ticker);
+        finished=true;
+        let ts=history.map(x=>x.seconds),sum=ts.reduce((a,b)=>a+b,0),avg=sum/ts.length,fast=Math.min(...ts),slow=Math.max(...ts),accuracy=100*TOTAL/(TOTAL+mistakes);
+        $('bar').style.width='100%';
+        $('completeLine').textContent=`${TOTAL} questions completed · Accuracy ${accuracy.toFixed(1)}%`;
+        $('accuracy').textContent=`♡ Accuracy ${accuracy.toFixed(1)}% ♡`;
+        $('avg').textContent=avg.toFixed(2)+'s';
+        $('fast').textContent=fast.toFixed(2)+'s';
+        $('slow').textContent=slow.toFixed(2)+'s';
+        $('mistakes').textContent=mistakes;
+        $('totalTime').textContent=`✦ Total Time: ${sum.toFixed(2)}s ✦`;
+        $('averageNote').textContent=`— Average ${avg.toFixed(2)}s`;
+        drawChart(ts,avg,fast);
+        show('complete')
+    }
+    function drawChart(values,avg,fast) {
+        const svg=$('chart');
+        svg.replaceChildren();
+        const NS='http://www.w3.org/2000/svg';
+        const add=(tag,attrs,text)=> {
+            const el=document.createElementNS(NS,tag);
+            Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+            if(text!==undefined)el.textContent=text;
+            svg.appendChild(el);
+            return el
+        };
+        const left=45,right=15,top=27,bottom=35,w=700-left-right,h=300-top-bottom,max=Math.max(...values,avg)*1.22||1;
+        for(let i=0;i<=4;i++) {
+            let val=max*i/4,y=top+h-(val/max)*h;
+            add('line', {
+                x1:left,x2:700-right,y1:y,y2:y,stroke:'#cdaed4','stroke-dasharray':'4 7','stroke-width':'1',opacity:'.65'
+            });
+            add('text', {
+                x:left-9,y:y+4,'text-anchor':'end',fill:'#94769c','font-size':'11'
+            },
+            val.toFixed(0))
+        }
+        let yavg=top+h-avg/max*h;
+        add('line', {
+            x1:left,x2:700-right,y1:yavg,y2:yavg,stroke:'#e99bc8','stroke-dasharray':'7 5','stroke-width':'2'
+        });
+        const gap=w/values.length,bw=Math.min(50,gap*.72);
+        values.forEach((v,i)=> {
+            let x=left+i*gap+gap/2,y=top+h-v/max*h;
+            add('rect', {
+                x:x-bw/2,y,width:bw,height:top+h-y,rx:Math.min(14,bw/3),fill:v===fast?'#eba9d0':'#b69cda'
+            });
+            if(values.length<=12||i%2===0) {
+                add('text', {
+                    x,y:Math.max(15,y-7),'text-anchor':'middle',fill:'#654b81','font-size':'10','font-weight':'600'
+                },
+                v.toFixed(1))
+            }
+            if(values.length<=12||i%2===1) {
+                add('text', {
+                    x,y:top+h+19,'text-anchor':'middle',fill:'#8d7395','font-size':'11'
+                },
+                i+1)
+            }
+        })
+    }
+    restart();
+  
+  </script>
+ </body>
+</html>
