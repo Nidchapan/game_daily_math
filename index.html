@@ -474,22 +474,29 @@
     const $=id=>document.getElementById(id);
     const TOTAL=20;
     let current=0,score=0,mistakes=0,questionMistakes=0,q=null,start=0,history=[],finished=false,ticker=null;
-    const rand=()=>Math.floor(Math.random()*20)+1;
-    function makeQ() {
-        let a,b,c,o1,o2,v;
-        do {
-            a=rand();
-            b=rand();
-            c=rand();
-            o1=Math.random()<.5?'+':'−';
-            o2=Math.random()<.5?'+':'−';
-            v=a+(o1==='+'?b:-b)+(o2==='+'?c:-c)
-        }
-        while(v<=0);
-        return {
-            text:`${a} ${o1} ${b} ${o2} ${c} = ?`,answer:v
-        }
-    }
+	const rand = () => Math.floor(Math.random() * 9) + 1;
+	function makeQ() {
+		let a, b, c, o1, o2, v, mid;
+		do {
+			a = rand();
+			b = rand();
+			c = rand();
+			// สุ่มเฉพาะ +− หรือ −+
+			if (Math.random() < 0.5) {
+				o1 = '+';
+				o2 = '−';
+			} else {
+				o1 = '−';
+				o2 = '+';
+			}
+			mid = a + (o1 === '+' ? b : -b);
+			v = mid + (o2 === '+' ? c : -c);
+		} while (mid <= 0 || v <= 0);
+		return {
+			text: `${a} ${o1} ${b} ${o2} ${c} = ?`,
+			answer: v
+		};
+	}
     function show(id) {
         ['game','complete','stats'].forEach(p=>$(p).classList.toggle('hide',p!==id))
     }
